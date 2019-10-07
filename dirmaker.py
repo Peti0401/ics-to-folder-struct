@@ -81,7 +81,7 @@ def format_event_date(date: str) -> str:
     return '{}_{}_{}'.format(date[0:4], date[4:6], date[6:8])
 
 
-def construct_directories(ics_file_path: str, root_dir_path: str, sub_dirs: list):
+def construct_directories(ics_file_path: str, root_dir_path: str, sub_dirs: list, files: list):
     '''
     Creates directories on the platform by processing the ics file.
     Base directories will be created as children of the directory at root_dir_path.
@@ -90,6 +90,7 @@ def construct_directories(ics_file_path: str, root_dir_path: str, sub_dirs: list
     :param str ics_file_path: Path to the ics file
     :param str root_dir_path: Path to the enclosing directory (gets created if not exists)
     :param list sub_dirs: A list of sub-directories relative to root_dir_path
+    :param list files: A list of files which will get created in each directory
     '''
     ics_file_lines = read_file(ics_file_path)
     line_groups = group_lines(ics_file_lines)
@@ -105,3 +106,8 @@ def construct_directories(ics_file_path: str, root_dir_path: str, sub_dirs: list
         for sub_dir in sub_dirs:
             sub_dir_path = '{}/{}'.format(dir_path, sub_dir)
             os.makedirs(sub_dir_path, exist_ok=True)
+
+        # Creating the specified files
+        for file in files:
+            file_path = '{}/{}'.format(dir_path, file)
+            open(file_path, "w")
